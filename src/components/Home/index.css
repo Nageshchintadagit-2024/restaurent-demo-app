@@ -1,0 +1,45 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.tabs-container {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  padding-left: 0px;
+  width: 100%;
+}
+
+.dishes-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:20px;
+}
+
+.tab-item {
+  list-style: none;
+  display: flex;
+  width: 50%;
+  align-items: center;
+  margin-left: 3px;
+}
+
+.button-item {
+  width: 240px;
+  height: 50px;
+  font-size: 20px;
+  font-family: 'Bree Serif';
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.active-tab-item {
+  color: #e8670c;
+  border-bottom: #e8670c solid 5px;
+}
+
+
