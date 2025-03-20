@@ -33,7 +33,6 @@ class App extends Component {
       }))
     }
 
-    //   TODO: Update the code here to implement addCartItem
   }
   incrementCartItemQuantity = id => {
     this.setState(prevState => ({

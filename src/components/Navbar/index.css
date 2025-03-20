@@ -66,7 +66,7 @@
   right: -10px;
 }
 
-/* Styling the cart container */
+
 .cart-icon-container {
   display: flex;
   align-items: center;
@@ -75,7 +75,7 @@
   background-color: #f9f9f9;
 }
 
-/* Styling the cart icon */
+
 .cart-icon {
   position: relative;
   font-size: 36px;
@@ -91,7 +91,7 @@
   }
 }
 
-/* Styling the badge */
+
 .cart-badge {
   position: absolute;
   top: -5px;
