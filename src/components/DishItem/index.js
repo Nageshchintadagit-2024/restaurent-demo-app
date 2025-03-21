@@ -1,11 +1,11 @@
-import AddingContext from '../../context/AddingContext'
-
 import {Component} from 'react'
 
 import './index.css'
 
 import {IoMdAdd} from 'react-icons/io'
 import {FaMinus} from 'react-icons/fa'
+
+import AddingContext from '../../context/AddingContext'
 
 class DishItem extends Component {
   state = {quantity: 1}
@@ -22,21 +22,20 @@ class DishItem extends Component {
   }
 
   render() {
-    const {dishItemDetails} = this.props
+    const {dishDetails} = this.props
     const {quantity} = this.state
+
     const {
       addonCat,
-      dish_Availability,
-      dish_Type,
-      dish_calories,
-      dish_currency,
-      dish_description,
-      dish_id,
-      dish_image,
-      dish_name,
-      dish_price,
-      nexturl,
-    } = dishItemDetails
+      dishAvailability,
+      dishCalories,
+      dishCurrency,
+      dishDescription,
+      dishId,
+      dishImage,
+      dishName,
+      dishPrice,
+    } = dishDetails
 
     const customizationsAvailability =
       addonCat.length > 0 && 'Customizations Avaliable'
@@ -49,32 +48,42 @@ class DishItem extends Component {
             addCartItem,
           } = value
 
-          const add = dish_id => {
+          const add = () => {
             this.incrementQuantity()
-            incrementCartItemQuantity(dish_id)
-            addCartItem({...dishItemDetails, quantity})
+            incrementCartItemQuantity(dishId)
+            addCartItem({...dishDetails, quantity})
           }
 
-          const sub = dish_id => {
+          const sub = () => {
             this.decrementQuantity()
-            decrementCartItemQuantity(dish_id)
+            decrementCartItemQuantity(dishId)
           }
 
           return (
             <li className="dish-item">
               <div className="dish-details-container">
-                <h1 className="dish-name">{dish_name}</h1>
+                <h1 className="dish-name">{dishName}</h1>
                 <p className="dish-price">
-                  {dish_currency} {dish_price}
+                  {dishCurrency} {dishPrice}
                 </p>
-                <p className="description">{dish_description}</p>
-                {dish_Availability ? (
+                <p className="description">{dishDescription}</p>
+                {dishAvailability ? (
                   <div className="buttons-container">
-                    <button className="adding-button" onClick={sub}>
+                    <button
+                      type="button"
+                      className="adding-button"
+                      onClick={sub}
+                    >
                       <FaMinus size={28} />
                     </button>
-                    <button className="count-button">{quantity - 1}</button>
-                    <button className="adding-button" onClick={add}>
+                    <button type="button" className="count-button">
+                      {quantity - 1}
+                    </button>
+                    <button
+                      type="button"
+                      className="adding-button"
+                      onClick={add}
+                    >
                       <IoMdAdd size={28} />
                     </button>
                   </div>
@@ -86,8 +95,8 @@ class DishItem extends Component {
                 </p>
               </div>
               <div className="image-container">
-                <p className="calories-text">{dish_calories} calories</p>
-                <img src={dish_image} alt={dish_name} className="image" />
+                <p className="calories-text">{dishCalories} calories</p>
+                <img src={dishImage} alt={dishName} className="image" />
               </div>
             </li>
           )

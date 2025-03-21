@@ -16,21 +16,54 @@ class Home extends Component {
       'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details',
     )
     const data = await response.json()
+    const filteredTabsList = data[0].table_menu_list.map(each => ({
+      categoryDishes: each.category_dishes,
+      menuCategory: each.menu_category,
+      menuCategoryId: each.menu_category_id,
+      menuCategoryImage: each.menu_category_image,
+      nxtUrl: each.nxturl,
+    }))
+
+    const filteredDishesList = data[0].table_menu_list[0].category_dishes.map(
+      dishItemDetails => ({
+        addonCat: dishItemDetails.addonCat,
+        dishAvailability: dishItemDetails.dish_Availability,
+        dishCalories: dishItemDetails.dish_calories,
+        dishCurrency: dishItemDetails.dish_currency,
+        dishDescription: dishItemDetails.dish_description,
+        dishId: dishItemDetails.dish_id,
+        dishImage: dishItemDetails.dish_image,
+        dishName: dishItemDetails.dish_name,
+        dishPrice: dishItemDetails.dish_price,
+        nxtUrl: dishItemDetails.nxturl,
+      }),
+    )
     this.setState({
-      tabsList: data[0].table_menu_list,
+      tabsList: filteredTabsList,
       activeTabItem: data[0].table_menu_list[0].menu_category_id,
-      dishesList: data[0].table_menu_list[0].category_dishes,
+      dishesList: filteredDishesList,
     })
   }
 
   onClickTabItem = id => {
     const {tabsList} = this.state
     const filteredList = tabsList.filter(
-      eachObj => eachObj.menu_category_id === id,
+      eachObj => eachObj.menuCategoryId === id,
     )
     this.setState({
       activeTabItem: id,
-      dishesList: filteredList[0].category_dishes,
+      dishesList: filteredList[0].categoryDishes.map(dishItemDetails => ({
+        addonCat: dishItemDetails.addonCat,
+        dishAvailability: dishItemDetails.dish_Availability,
+        dishCalories: dishItemDetails.dish_calories,
+        dishCurrency: dishItemDetails.dish_currency,
+        dishDescription: dishItemDetails.dish_description,
+        dishId: dishItemDetails.dish_id,
+        dishImage: dishItemDetails.dish_image,
+        dishName: dishItemDetails.dish_name,
+        dishPrice: dishItemDetails.dish_price,
+        nxtUrl: dishItemDetails.nxturl,
+      })),
     })
   }
 
@@ -39,20 +72,23 @@ class Home extends Component {
     return (
       <ul className="tabs-container">
         {tabsList.map(eachTabObj => {
-          const {menu_category_id, menu_category} = eachTabObj
+          const {menuCategoryId, menuCategory} = eachTabObj
           const clickedTabItem = () => {
-            this.onClickTabItem(menu_category_id)
+            this.onClickTabItem(menuCategoryId)
           }
           const activeTabColor =
-            activeTabItem === menu_category_id ? 'active-tab-item' : ''
+            activeTabItem === menuCategoryId ? 'active-tab-item' : ''
           return (
             <li
               className="tab-item"
-              key={menu_category_id}
+              key={menuCategoryId}
               onClick={clickedTabItem}
             >
-              <button className={`button-item  ${activeTabColor}`}>
-                {menu_category}
+              <button
+                type="button"
+                className={`button-item  ${activeTabColor}`}
+              >
+                {menuCategory}
               </button>
             </li>
           )
@@ -66,15 +102,13 @@ class Home extends Component {
     return (
       <ul className="dishes-container">
         {dishesList.map(eachObj => (
-          <DishItem dishItemDetails={eachObj} key={eachObj.dish_id} />
+          <DishItem dishDetails={eachObj} key={eachObj.dishId} />
         ))}
       </ul>
     )
   }
 
   render() {
-    const {tabsList, activeTabItem, dishesList} = this.state
-
     return (
       <div className="home-container">
         {this.renderTabsList()}

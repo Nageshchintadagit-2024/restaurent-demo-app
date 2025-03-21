@@ -8,17 +8,17 @@ import AddingContext from './context/AddingContext'
 
 import './App.css'
 
-//write your code here
+// write your code here
 
 class App extends Component {
   state = {cartList: []}
 
   addCartItem = product => {
     const {cartList} = this.state
-    if (cartList.find(eachProduct => eachProduct.dish_id === product.dish_id)) {
+    if (cartList.find(eachProduct => eachProduct.dishId === product.dishId)) {
       this.setState(prevState => ({
         cartList: prevState.cartList.map(eachProduct => {
-          if (eachProduct.dish_id === product.dish_id) {
+          if (eachProduct.dishId === product.dishId) {
             return {
               ...eachProduct,
               quantity: eachProduct.quantity + 1,
@@ -32,13 +32,13 @@ class App extends Component {
         cartList: [...prevState.cartList, product],
       }))
     }
-
   }
+
   incrementCartItemQuantity = id => {
     this.setState(prevState => ({
       cartList: prevState.cartList.map(eachItem => {
-        if (eachItem.dish_id === id) {
-          const updatedQuantity = quantity + 1
+        if (eachItem.dishId === id) {
+          const updatedQuantity = eachItem.quantity + 1
           return {...eachItem, updatedQuantity}
         }
         return eachItem
@@ -49,8 +49,8 @@ class App extends Component {
   decrementCartItemQuantity = id => {
     this.setState(prevState => ({
       cartList: prevState.cartList.map(eachItem => {
-        if (eachItem.dish_id === id) {
-          const updatedQuantity = quantity - 1
+        if (eachItem.dishId === id) {
+          const updatedQuantity = eachItem.quantity - 1
           return {...eachItem, updatedQuantity}
         }
         return eachItem
@@ -64,7 +64,7 @@ class App extends Component {
     return (
       <AddingContext.Provider
         value={{
-          cartList: cartList,
+          cartList,
           addCartItem: this.addCartItem,
           incrementCartItemQuantity: this.incrementCartItemQuantity,
           decrementCartItemQuantity: this.decrementCartItemQuantity,
