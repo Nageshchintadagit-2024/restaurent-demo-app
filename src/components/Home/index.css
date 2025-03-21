@@ -12,11 +12,11 @@
   width: 100%;
 }
 
-.dishes-container{
+.dishes-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding:20px;
+  padding: 20px;
 }
 
 .tab-item {
@@ -41,5 +41,3 @@
   color: #e8670c;
   border-bottom: #e8670c solid 5px;
 }
-
-
