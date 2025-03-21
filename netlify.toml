@@ -1,11 +1,8 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build"
   publish = "build"
 
 [context.production.environment]
-  NODE_VERSION = "16.20.0"  # Compatible with react-scripts 4.x and webpack 4.x
-  NPM_VERSION = "8.5.1"     # Use a compatible npm version
-
-[context.deploy-preview.environment]
-  NODE_VERSION = "16.20.0"
-  NPM_VERSION = "8.5.1"
+  NODE_VERSION = "18.20.0" # Specify Node.js 18 or later
+  NPM_VERSION = "9.5.0"    # Optional but recommended
+  CI = "true"
