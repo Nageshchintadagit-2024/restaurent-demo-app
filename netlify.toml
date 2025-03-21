@@ -1,5 +1,6 @@
 [build]
-  command = "CI='' npm run build"
+  command = "CI='' npm install && npm run build
+"
   publish = "build"
 
 [context.production.environment]
