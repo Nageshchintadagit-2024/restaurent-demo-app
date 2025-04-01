@@ -64,6 +64,7 @@
   border: none;
   color: white;
   cursor: pointer;
+  font-size: 28px;
 }
 
 .count-button {

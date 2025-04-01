@@ -1,9 +1,0 @@
-[build]
-  command = "npm run build"
-  publish = "build"
-
-[context.production.environment]
-  NODE_VERSION = "18.20.0"
-  NPM_VERSION = "9.5.0"
-  CI = "true"
-  NODE_OPTIONS = "--openssl-legacy-provider"

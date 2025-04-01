@@ -1,7 +1,5 @@
 import {Component} from 'react'
 
-import Navbar from './components/Navbar'
-
 import Home from './components/Home'
 
 import AddingContext from './context/AddingContext'
@@ -29,33 +27,26 @@ class App extends Component {
       }))
     } else {
       this.setState(prevState => ({
-        cartList: [...prevState.cartList, product],
+        cartList: [...prevState.cartList, {...product, quantity: 1}],
       }))
     }
   }
 
-  incrementCartItemQuantity = id => {
-    this.setState(prevState => ({
-      cartList: prevState.cartList.map(eachItem => {
-        if (eachItem.dishId === id) {
-          const updatedQuantity = eachItem.quantity + 1
-          return {...eachItem, updatedQuantity}
-        }
-        return eachItem
-      }),
-    }))
-  }
-
-  decrementCartItemQuantity = id => {
-    this.setState(prevState => ({
-      cartList: prevState.cartList.map(eachItem => {
-        if (eachItem.dishId === id) {
-          const updatedQuantity = eachItem.quantity - 1
-          return {...eachItem, updatedQuantity}
-        }
-        return eachItem
-      }),
-    }))
+  removeCartItem = dish => {
+    const {cartList} = this.state
+    const isAlreadyExists = cartList.find(item => item.dishId === dish.dishId)
+    if (isAlreadyExists) {
+      this.setState(prevState => ({
+        cartList: prevState.cartList
+          .map(each => {
+            if (each.dishId === dish.dishId) {
+              return {...each, quantity: each.quantity - 1}
+            }
+            return each
+          })
+          .filter(each => each.quantity > 0),
+      }))
+    }
   }
 
   render() {
@@ -66,11 +57,9 @@ class App extends Component {
         value={{
           cartList,
           addCartItem: this.addCartItem,
-          incrementCartItemQuantity: this.incrementCartItemQuantity,
-          decrementCartItemQuantity: this.decrementCartItemQuantity,
+          removeCartItem: this.removeCartItem,
         }}
       >
-        <Navbar />
         <Home />
       </AddingContext.Provider>
     )

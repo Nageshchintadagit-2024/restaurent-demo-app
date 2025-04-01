@@ -3,8 +3,7 @@ import React from 'react'
 const AddingContext = React.createContext({
   cartList: [],
   addCartItem: () => {},
-  incrementCartItemQuantity: () => {},
-  decrementCartItemQuantity: () => {},
+  removeCartItem: () => {},
 })
 
 export default AddingContext

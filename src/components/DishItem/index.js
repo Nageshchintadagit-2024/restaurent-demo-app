@@ -2,28 +2,11 @@ import {Component} from 'react'
 
 import './index.css'
 
-import {IoMdAdd} from 'react-icons/io'
-import {FaMinus} from 'react-icons/fa'
-
 import AddingContext from '../../context/AddingContext'
 
 class DishItem extends Component {
-  state = {quantity: 1}
-
-  incrementQuantity = () => {
-    this.setState(prevState => ({quantity: prevState.quantity + 1}))
-  }
-
-  decrementQuantity = () => {
-    const {quantity} = this.state
-    if (quantity > 1) {
-      this.setState(prevState => ({quantity: prevState.quantity - 1}))
-    }
-  }
-
   render() {
     const {dishDetails} = this.props
-    const {quantity} = this.state
 
     const {
       addonCat,
@@ -38,25 +21,23 @@ class DishItem extends Component {
     } = dishDetails
 
     const customizationsAvailability =
-      addonCat.length > 0 && 'Customizations Avaliable'
+      addonCat.length > 0 && 'Customizations available'
     return (
       <AddingContext.Consumer>
         {value => {
-          const {
-            incrementCartItemQuantity,
-            decrementCartItemQuantity,
-            addCartItem,
-          } = value
+          const {addCartItem, removeCartItem, cartList} = value
+
+          const getQuantity = () => {
+            const cartItem = cartList.find(item => item.dishId === dishId)
+            return cartItem ? cartItem.quantity : 0
+          }
 
           const add = () => {
-            this.incrementQuantity()
-            incrementCartItemQuantity(dishId)
-            addCartItem({...dishDetails, quantity})
+            addCartItem(dishDetails)
           }
 
           const sub = () => {
-            this.decrementQuantity()
-            decrementCartItemQuantity(dishId)
+            removeCartItem(dishDetails)
           }
 
           return (
@@ -74,17 +55,17 @@ class DishItem extends Component {
                       className="adding-button"
                       onClick={sub}
                     >
-                      <FaMinus size={28} />
+                      -
                     </button>
-                    <button type="button" className="count-button">
-                      {quantity - 1}
-                    </button>
+                    <p type="button" className="count-button">
+                      {getQuantity()}
+                    </p>
                     <button
                       type="button"
                       className="adding-button"
                       onClick={add}
                     >
-                      <IoMdAdd size={28} />
+                      +
                     </button>
                   </div>
                 ) : (

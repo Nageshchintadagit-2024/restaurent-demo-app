@@ -6,6 +6,8 @@ import AddingContext from '../../context/AddingContext'
 
 class Navbar extends Component {
   render() {
+    const {restaurentName} = this.props
+    console.log(restaurentName)
     return (
       <AddingContext.Consumer>
         {value => {
@@ -14,7 +16,7 @@ class Navbar extends Component {
           return (
             <div className="header">
               <nav className="header-container">
-                <h1 className="heading">UNI Resto cafe</h1>
+                <h1 className="heading">{restaurentName}</h1>
                 <div className="cart-container">
                   <p className="my-orders">My Orders</p>
                   <div className="cart-icon">
