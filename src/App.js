@@ -1,69 +1,92 @@
 import {Component} from 'react'
+import {Switch, Route, Redirect} from 'react-router-dom'
 
 import Home from './components/Home'
 
-import AddingContext from './context/AddingContext'
+import CartContext from './context/CartContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from './components/Login'
+import Cart from './components/Cart'
+import NotFound from './components/NotFound'
 
 import './App.css'
-
-// write your code here
 
 class App extends Component {
   state = {cartList: []}
 
-  addCartItem = product => {
+  addCartItem = dish => {
     const {cartList} = this.state
-    if (cartList.find(eachProduct => eachProduct.dishId === product.dishId)) {
-      this.setState(prevState => ({
-        cartList: prevState.cartList.map(eachProduct => {
-          if (eachProduct.dishId === product.dishId) {
-            return {
-              ...eachProduct,
-              quantity: eachProduct.quantity + 1,
-            }
-          }
-          return eachProduct
-        }),
-      }))
+    const isAlreadyExists = cartList.find(item => item.dishId === dish.dishId)
+
+    if (isAlreadyExists === undefined) {
+      this.setState(prevState => ({cartList: [...prevState.cartList, dish]}))
     } else {
       this.setState(prevState => ({
-        cartList: [...prevState.cartList, {...product, quantity: 1}],
+        cartList: prevState.cartList.map(item =>
+          item.dishId === dish.dishId
+            ? {...item, quantity: item.quantity + dish.quantity}
+            : item,
+        ),
       }))
     }
   }
 
-  removeCartItem = dish => {
+  removeCartItem = dishId => {
+    this.setState(prevState => ({
+      cartList: prevState.cartList.filter(item => item.dishId !== dishId),
+    }))
+  }
+
+  removeAllCartItems = () => this.setState({cartList: []})
+
+  incrementCartItemQuantity = dishId => {
+    this.setState(prevState => ({
+      cartList: prevState.cartList.map(item =>
+        item.dishId === dishId ? {...item, quantity: item.quantity + 1} : item,
+      ),
+    }))
+  }
+
+  decrementCartItemQuantity = dishId => {
     const {cartList} = this.state
-    const isAlreadyExists = cartList.find(item => item.dishId === dish.dishId)
-    if (isAlreadyExists) {
+    const dishItem = cartList.find(item => item.dishId === dishId)
+    if (dishItem.quantity > 1) {
       this.setState(prevState => ({
-        cartList: prevState.cartList
-          .map(each => {
-            if (each.dishId === dish.dishId) {
-              return {...each, quantity: each.quantity - 1}
-            }
-            return each
-          })
-          .filter(each => each.quantity > 0),
+        cartList: prevState.cartList.map(item =>
+          item.dishId === dishId
+            ? {...item, quantity: item.quantity - 1}
+            : item,
+        ),
+      }))
+    } else {
+      this.setState(prevState => ({
+        cartList: prevState.cartList.filter(item => item.dishId !== dishId),
       }))
     }
   }
 
   render() {
     const {cartList} = this.state
-    console.log(cartList)
     return (
-      <AddingContext.Provider
+      <CartContext.Provider
         value={{
           cartList,
           addCartItem: this.addCartItem,
           removeCartItem: this.removeCartItem,
+          removeAllCartItems: this.removeAllCartItems,
+          incrementCartItemQuantity: this.incrementCartItemQuantity,
+          decrementCartItemQuantity: this.decrementCartItemQuantity,
         }}
       >
-        <Home />
-      </AddingContext.Provider>
+        <Switch>
+          <Route exact path="/login" component={Login} />
+          <ProtectedRoute exact path="/" component={Home} />
+          <ProtectedRoute exact path="/cart" component={Cart} />
+          <Route exact path="/not-found" component={NotFound} />
+          <Redirect to="/not-found" />
+        </Switch>
+      </CartContext.Provider>
     )
   }
 }
-
 export default App

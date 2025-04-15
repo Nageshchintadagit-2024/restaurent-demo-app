@@ -1,90 +1,78 @@
-import {Component} from 'react'
-
+import {useState, useContext} from 'react'
 import './index.css'
+import {BsCircleFill} from 'react-icons/bs'
+import CartContext from '../../context/CartContext'
 
-import AddingContext from '../../context/AddingContext'
+const DishItem = props => {
+  const {dishDetails} = props
+  const {
+    dishName,
+    dishType,
+    dishPrice,
+    dishCurrency,
+    dishDescription,
+    dishImage,
+    dishCalories,
+    addonCat,
+    dishAvailability,
+  } = dishDetails
 
-class DishItem extends Component {
-  render() {
-    const {dishDetails} = this.props
+  const [quantity, setQuantity] = useState(0)
+  const {addCartItem} = useContext(CartContext)
 
-    const {
-      addonCat,
-      dishAvailability,
-      dishCalories,
-      dishCurrency,
-      dishDescription,
-      dishId,
-      dishImage,
-      dishName,
-      dishPrice,
-    } = dishDetails
+  const onAddItemToCart = () => addCartItem({...dishDetails, quantity})
 
-    const customizationsAvailability =
-      addonCat.length > 0 && 'Customizations available'
-    return (
-      <AddingContext.Consumer>
-        {value => {
-          const {addCartItem, removeCartItem, cartList} = value
+  const increaseQuantity = () => setQuantity(prevState => prevState + 1)
+  const decreaseQuantity = () =>
+    setQuantity(prevState => (prevState > 0 ? prevState - 1 : 0))
 
-          const getQuantity = () => {
-            const cartItem = cartList.find(item => item.dishId === dishId)
-            return cartItem ? cartItem.quantity : 0
-          }
+  const renderControllerButton = () => (
+    <div className="controller-container">
+      <button className="button" type="button" onClick={decreaseQuantity}>
+        -
+      </button>
+      <p className="quantity">{quantity}</p>
+      <button className="button" type="button" onClick={increaseQuantity}>
+        +
+      </button>
+    </div>
+  )
 
-          const add = () => {
-            addCartItem(dishDetails)
-          }
+  return (
+    <li className="dish-item-container">
+      <div className={dishType === 1 ? 'non-veg-border' : 'veg-border'}>
+        <BsCircleFill
+          className={dishType === 1 ? 'non-veg-round' : 'veg-round'}
+        />
+      </div>
+      <div className="dish-details-container">
+        <h1 className="dish-name">{dishName}</h1>
+        <p className="dish-currency-price">
+          {dishCurrency} {dishPrice}
+        </p>
+        <p className="dish-description">{dishDescription}</p>
+        {dishAvailability && renderControllerButton()}
+        {!dishAvailability && <p className="available-text">Not available</p>}
+        {addonCat.length !== 0 && (
+          <p className="custom-text">Customizations available</p>
+        )}
+        {quantity > 0 && (
+          <button
+            className="add-to-cart-button"
+            type="button"
+            onClick={onAddItemToCart}
+          >
+            ADD TO CART
+          </button>
+        )}
+      </div>
 
-          const sub = () => {
-            removeCartItem(dishDetails)
-          }
-
-          return (
-            <li className="dish-item">
-              <div className="dish-details-container">
-                <h1 className="dish-name">{dishName}</h1>
-                <p className="dish-price">
-                  {dishCurrency} {dishPrice}
-                </p>
-                <p className="description">{dishDescription}</p>
-                {dishAvailability ? (
-                  <div className="buttons-container">
-                    <button
-                      type="button"
-                      className="adding-button"
-                      onClick={sub}
-                    >
-                      -
-                    </button>
-                    <p type="button" className="count-button">
-                      {getQuantity()}
-                    </p>
-                    <button
-                      type="button"
-                      className="adding-button"
-                      onClick={add}
-                    >
-                      +
-                    </button>
-                  </div>
-                ) : (
-                  <p className="not-available-status">Not Available</p>
-                )}
-                <p className="customizations-text">
-                  {customizationsAvailability}
-                </p>
-              </div>
-              <div className="image-container">
-                <p className="calories-text">{dishCalories} calories</p>
-                <img src={dishImage} alt={dishName} className="image" />
-              </div>
-            </li>
-          )
-        }}
-      </AddingContext.Consumer>
-    )
-  }
+      <div className="calories-image-con">
+        <p className="dish-calories">{dishCalories} calories</p>
+        <img className="dish-image" src={dishImage} alt={dishName} />
+      </div>
+    </li>
+  )
 }
 
 export default DishItem
